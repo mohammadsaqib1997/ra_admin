@@ -2,10 +2,11 @@ const _ = require('lodash');
 const moment = require('moment');
 
 const admin = require("firebase-admin");
+const conf = require("../config/private");
 const serviceAccount = require("../config/serviceAccountKey.json");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://radioapp-a8558.firebaseio.com"
+    databaseURL: conf.config_fb.databaseURL
 });
 const db = admin.database();
 const adminNotificationsRef = db.ref("admin_notifications");

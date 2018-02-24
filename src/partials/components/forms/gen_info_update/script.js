@@ -106,14 +106,17 @@ export default {
         },
         'formdata.make': function (value) {
             return Validator.value(value).required().minLength(3).maxLength(20);
+        },
+        'formdata.sel_adda': function(value) {
+            return Validator.value(value).maxLength(30);
         }
     },
     methods: {
         form_submit: function () {
             let self = this;
+            self.formStatus = true;
             self.$validate().then(function (success) {
                 if(success){
-                    self.formStatus = true;
                     self.userRef.child(self.sel_uid).update({
                         'first_name': self.formdata.fname,
                         'last_name': self.formdata.lname,
@@ -126,6 +129,8 @@ export default {
                         'v_number': self.formdata.vehicle_number,
                         'v_make': self.formdata.make,
                         'v_owner': (self.formdata.owner) ? "Yes": "No",
+                        'adda_ref': self.formdata.sel_adda,
+                        'offline': self.formdata.offline_driver
                     }, function (err) {
                         if(err){
                             self.errMsg = err.message;
@@ -138,6 +143,8 @@ export default {
                         }
                         self.formStatus = false;
                     });
+                }else{
+                    self.formStatus = false;
                 }
             });
         }

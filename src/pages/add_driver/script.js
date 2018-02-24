@@ -12,7 +12,6 @@ export default {
     },
     created: function(){
         let self = this;
-        console.log(self.userPushRefKey);
         /*$(function(){
             $("#fm_add_driver").find("input[type=file]").on("change", function(event){
                 self.fileChange(event);

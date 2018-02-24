@@ -20,6 +20,8 @@ export default {
                 self.formdata.mobile_number = renderData.mob_no;
                 self.formdata.cnic_number = self.checkField(renderData.cnic_no);
                 self.formdata.driving_license = self.checkField(renderData.driving_license);
+                self.formdata.sel_adda = self.checkField(renderData.adda_ref);
+                self.formdata.offline_driver = self.checkField(renderData.offline);
                 self.formdata.vehicle = renderData.vehicle;
                 self.formdata.model_year = self.checkField(renderData.v_model_year);
                 self.formdata.vehicle_number = self.checkField(renderData.v_number);
@@ -45,15 +47,17 @@ export default {
                 vehicle: "",
                 model_year: "",
                 vehicle_number: "",
-                make: ""
+                make: "",
+                sel_adda: "",
+                offline_driver: false
             },
             userRef: null
         }
 
     },
     methods: {
-        checkField: function(val){
-            return (typeof val !== 'undefined') ? val: "";
+        checkField: function(val, assignVal){
+            return (typeof val !== 'undefined') ? val: ((assignVal) ? assignVal: '');
         }
     },
     components: {

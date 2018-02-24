@@ -187,6 +187,7 @@
             submit() {
                 const self = this;
                 self.formUtil.process = true;
+                self.formUtil.err = "";
                 self.$validate().then(function (success) {
                     if (success) {
                         let salt = bcrypt.genSaltSync(saltRounds);
@@ -201,14 +202,15 @@
                             driving_license: self.driving_license,
                             adda_ref: self.sel_adda,
                             offline: self.offline_driver,
-                            type: 'driver'
+                            type: 'driver',
+                            status: 0
                         }, function (err) {
                             if(err){
                                 self.formUtil.err = err.message;
                             }else{
                                 self.formUtil.submitted = true;
                                 self.formUtil.err = "";
-                                self.formUtil.suc = "Successfully updated data!";
+                                self.formUtil.suc = "Successfully insert data!";
                                 setTimeout(function () {
                                     self.formUtil.suc = "";
                                 }, 1500);
