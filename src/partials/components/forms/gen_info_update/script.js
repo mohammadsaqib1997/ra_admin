@@ -1,4 +1,6 @@
 import firebase from 'firebase'
+import _ from 'lodash'
+import func from '../../../../../custom_libs/func.js'
 
 import Promise from 'bluebird'
 import SimpleVueValidation from 'simple-vue-validator'
@@ -7,16 +9,26 @@ const Validator = SimpleVueValidation.Validator;
 export default {
     created: function(){
         let self = this;
-        const db = firebase.database();
-        self.userRef = db.ref('/users');
+        self.addaListRef.once('value', function (snap) {
+            if (snap.val() !== null) {
+                self.addaListData = _.map(snap.val(), function (val) {
+                    let obj = val;
+                    obj['place_name'] = func.toTitleCase(val.place_name);
+                    return obj;
+                });
+            }
+        });
     },
     props: [
         'formdata', 'sel_uid'
     ],
     data(){
+        const db = firebase.database();
         return {
+            addaListRef: db.ref("adda_list"),
+            userRef: db.ref('/users'),
+            addaListData: [],
             formStatus: false,
-            userRef: null,
             sucMsg: "",
             errMsg: ""
         }

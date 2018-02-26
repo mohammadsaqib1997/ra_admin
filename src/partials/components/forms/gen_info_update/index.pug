@@ -47,7 +47,7 @@ form(v-on:submit.prevent="form_submit")
                 label(for='sel_adda') Select Adda
                 select.form-control(id="sel_adda" v-model="formdata.sel_adda")
                     option(value="") Select Adda
-                    //option(v-for="adda in addaListData" v-bind:value="adda.id") {{ adda.place_name }}
+                    option(v-for="adda in addaListData" v-bind:value="adda.id") {{ adda.place_name }}
                 p.text-danger.text-right(v-if='validation.hasError("formdata.sel_adda")') {{ validation.firstError('formdata.sel_adda') }}
         .col-md-6
             .form-group(style="margin-left: 20px;")
