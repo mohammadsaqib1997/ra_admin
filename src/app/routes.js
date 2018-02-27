@@ -31,6 +31,7 @@ import leaderboard from '../pages/leaderboard/leaderboard.vue'
 
 import addAdda from '../pages/add_adda/add_adda.vue'
 import listAdda from '../pages/list_adda/list_adda.vue'
+import editAdda from '../pages/edit_adda/edit_adda.vue'
 
 const routes = [
     {
@@ -53,7 +54,8 @@ const routes = [
                         component: parentComLayout,
                         children: [
                             {path: 'add', component: addAdda},
-                            {path: 'list', component: listAdda}
+                            {path: 'list', component: listAdda},
+                            {path: 'edit/:id', component: editAdda}
                         ]
                     },
                     {

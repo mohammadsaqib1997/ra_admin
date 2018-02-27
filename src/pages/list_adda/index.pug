@@ -43,8 +43,8 @@ aside.right-side
                                                     td
                                                         button.btn.btn-danger.btn-sm(type='button' style="margin-right: 5px;" v-on:click.stop="showPopup(row.id)")
                                                             i.fa.fa-trash-o
-                                                        //button.btn.btn-danger.btn-sm(type='button')
-                                                        //    i.fa.fa-edit
+                                                        button.btn.btn-danger.btn-sm(type='button' v-on:click.stop="moveEdit(row.id)")
+                                                            i.fa.fa-edit
                                 .col-md-6
                                     h3 View Content
                                     h4 Adda Name: {{ (viewData) ? toTitleCase(viewData.place_name):'' }}

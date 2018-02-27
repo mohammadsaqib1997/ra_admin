@@ -1,33 +1,44 @@
 import firebase from "firebase";
 import Promise from 'bluebird'
+import _ from 'lodash'
 
 import SimpleVueValidation from 'simple-vue-validator'
+
 const Validator = SimpleVueValidation.Validator;
 
 import googleStyle from '../new_req/style_json.json'
 
 
 export default {
-    created: function(){
+    created: function () {
         let self = this;
-
-        $(function () {
-            if (!self.$root.mapLoaded) {
-                $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCeDfncmN-9FXb-1Gv4wcRpDWZ4AUnrqws&libraries=places")
-                    .done(function (script, textStatus) {
-                        self.$root.mapLoaded = true;
+        self.addaListRef.child(self.$route.params.id).once('value', function (snap) {
+            if (snap.val() !== null) {
+                let data = snap.val();
+                self.location.lat = data.location.lat;
+                self.location.lng = data.location.lng;
+                self.aName = data.place_name;
+                $(function () {
+                    if (!self.$root.mapLoaded) {
+                        $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCeDfncmN-9FXb-1Gv4wcRpDWZ4AUnrqws&libraries=places")
+                            .done(function (script, textStatus) {
+                                self.$root.mapLoaded = true;
+                                self.mapInit();
+                            })
+                            .fail(function (jqxhr, settings, exception) {
+                                console.log("Triggered ajaxError handler.");
+                            });
+                    } else {
                         self.mapInit();
-                    })
-                    .fail(function (jqxhr, settings, exception) {
-                        console.log("Triggered ajaxError handler.");
-                    });
+                    }
+                });
             } else {
-                self.mapInit();
+                self.$router.push('/admin');
             }
         });
     },
     validators: {
-        aName (val) {
+        aName(val) {
             const self = this;
             return Validator.value(val).required().lengthBetween(3, 100).custom(function () {
                 if (!Validator.isEmpty(val)) {
@@ -35,8 +46,10 @@ export default {
                         .then(function () {
                             return self.addaListRef.orderByChild('place_name').equalTo(val.toString().toLowerCase()).once('value').then(function (snap) {
                                 let snapData = snap.val();
-                                if(snapData !== null){
-                                    return 'Already taken!';
+                                if (snapData !== null) {
+                                    if (self.$route.params.id !== _.findKey(snapData, {id: self.$route.params.id})) {
+                                        return 'Already taken!';
+                                    }
                                 }
                             });
                         });
@@ -62,7 +75,7 @@ export default {
             });
         }
     },
-    data(){
+    data() {
         const db = firebase.database();
         return {
             formCB: {
@@ -88,10 +101,10 @@ export default {
         mapInit() {
             const self = this;
             setTimeout(function () {
-                let latlng = new google.maps.LatLng(25.047486081295794, 67.26028803808595);
+                let latlng = new google.maps.LatLng(self.location.lat, self.location.lng);
                 let mapOptions = {
                     center: latlng,
-                    zoom: 9,
+                    zoom: 15,
                     styles: googleStyle
                 };
                 self.map = new google.maps.Map(document.getElementById('map'), mapOptions);
@@ -102,7 +115,7 @@ export default {
                 self.placeAC.addListener('place_changed', function () {
                     let place = self.placeAC.getPlace();
                     self.checkAC = true;
-                    if(!place.geometry) {
+                    if (!place.geometry) {
                         return;
                     }
                     if (place.geometry.viewport) {
@@ -117,9 +130,6 @@ export default {
                     position: latlng,
                     map: self.map
                 });
-
-                self.location.lat = self.map.getCenter().lat();
-                self.location.lng = self.map.getCenter().lng();
 
                 self.map.addListener('idle', function () {
                     self.location.lat = self.map.getCenter().lat();
@@ -136,42 +146,32 @@ export default {
                 });
             }, 1000);
         },
-        insertAdda () {
+        updateAdda() {
             const self = this;
             self.formSubStatus = true;
             self.$validate().then(function (success) {
-                if(success){
-                    let key = self.addaListRef.push();
-                    key.set({
-                        id: key.key,
+                if (success) {
+                    self.addaListRef.child(self.$route.params.id).update({
                         location: self.location,
                         place_name: self.aName.toLowerCase()
                     }, function (err) {
-                        if(err){
+                        if (err) {
                             self.formCB.err = err.message;
-                        }else{
-                            self.resetForm();
+                        } else {
                             self.formCB.err = "";
-                            self.formCB.suc = 'Successfully add adda.';
+                            self.formCB.suc = 'Successfully updated adda.';
                             setTimeout(function () {
                                 self.formCB.suc = "";
                             }, 1500);
                         }
                         self.formSubStatus = false;
                     });
-                }else{
+                } else {
                     self.formSubStatus = false;
                 }
             });
         },
-        resetForm () {
-            const self = this;
-            self.map.setCenter(new google.maps.LatLng(25.047486081295794, 67.26028803808595));
-            self.map.setZoom(9);
-            self.aName = '';
-            self.validation.reset();
-        },
-        changeLLMapSet () {
+        changeLLMapSet() {
             const self = this;
             if (!self.validation.hasError("location.lat") && !self.validation.hasError("location.lng")) {
                 if (self.map) {

@@ -129,6 +129,9 @@ export default {
             }
             self.viewMap.setCenter(latlng);
             self.viewMap.setZoom(13);
+        },
+        moveEdit (key) {
+            this.$router.push('/admin/adda/edit/'+key);
         }
     }
 }

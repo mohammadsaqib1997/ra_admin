@@ -1,18 +1,18 @@
 aside.right-side
     section.content-header
-        h1 Add Adda
+        h1 Edit Adda
         ol.breadcrumb
             li
                 router-link(to='/')
                     i.fa.fa-dashboard
                     |  Dashboard
-            li.active Add Adda
+            li.active Edit Adda
     section.content
         .row
             .col-xs-12
                 .box
                     .box-header
-                        h3.box-title Add Adda
+                        h3.box-title Edit Adda
                     .box-body
                         .row
                             .col-md-6.col-md-offset-3
@@ -48,4 +48,4 @@ aside.right-side
                                         .form-group.text-center
                                             button.btn.btn-warning.btn-sm(type='button' v-if="formSubStatus" disabled)
                                                 i.fa.fa-refresh.fa-spin.fa-2x.fa-fw
-                                            button.btn.btn-success.btn-lg(type='button' v-on:click.prevent="insertAdda" v-else) Submit
+                                            button.btn.btn-success.btn-lg(type='button' v-on:click.prevent="updateAdda" v-else) Update
