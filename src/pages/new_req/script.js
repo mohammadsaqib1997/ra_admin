@@ -28,17 +28,9 @@ export default {
                 self.mapInit();
             }
         });
-
-        const db = firebase.database();
-        self.userRef = db.ref('/users');
-        self.userReqRef = db.ref('/user_requests');
-        self.liveReqRef = db.ref('/user_live_requests');
-        self.driverBidsRef = db.ref('/driver_bids');
-        self.onlineDriversRef = db.ref('/online_drivers');
-
-
     },
     data: function () {
+        const db = firebase.database();
         return {
             dataLoad: true,
             dataLoad1: true,
@@ -48,15 +40,17 @@ export default {
             driversData: {},
             liveDriverData: {},
 
-            userRef: null,
-            userReqRef: null,
-            driverBidsRef: null,
-            liveReqRef: null,
-            onlineDriversRef: null,
+            userRef: db.ref('/users'),
+            userReqRef: db.ref('/user_requests'),
+            driverBidsRef: db.ref('/driver_bids'),
+            liveReqRef: db.ref('/user_live_requests'),
+            onlineDriversRef: db.ref('/online_drivers'),
+            addaListRef: db.ref('/adda_list'),
             // map variables
             map: null,
             markers: {},
             dMarkers: {},
+            addaMarkers: {},
             infoWindows: null,
             // push bid fields
             sel_req_id: "",
@@ -86,7 +80,29 @@ export default {
                 self.infoWindows = new google.maps.InfoWindow();
                 self.loadLiveReq();
                 self.loadLiveDriver();
+                self.loadAddaPins();
             }, 1000);
+        },
+        loadAddaPins () {
+            const self = this;
+            self.addaListRef.once('value', function (snap) {
+                if (snap.val() !== null) {
+                    let data = snap.val();
+                    snap.forEach(function (adda_item) {
+                        let key = adda_item.key;
+                        let row = adda_item.val();
+                        let selLL = new google.maps.LatLng(parseFloat(row.location.lat), parseFloat(row.location.lng));
+                        self.addaMarkers[key] = new google.maps.Marker({
+                            position: selLL,
+                            map: self.map,
+                            icon: {
+                                url: "/images/icons/warehouse.png",
+                                scaledSize: new google.maps.Size(50, 50)
+                            }
+                        });
+                    });
+                }
+            });
         },
         loadLiveReq: function () {
             let self = this;

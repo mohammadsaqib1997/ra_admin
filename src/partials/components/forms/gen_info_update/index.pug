@@ -78,7 +78,7 @@ form(v-on:submit.prevent="form_submit")
                 .col-md-6
                     .form-group
                         label(for='vehicle_number') Vehicle Number
-                        input.form-control(type='text' autocomplete='off' id='vehicle_number' v-model='formdata.vehicle_number' placeholder='Eg: BEL-923')
+                        input.form-control(type='text' autocomplete='off' id='vehicle_number' v-model='formdata.vehicle_number' placeholder='Eg: BEL-9231')
                         p.text-danger.text-right(v-if='validation.hasError("formdata.vehicle_number")') {{ validation.firstError('formdata.vehicle_number') }}
         .col-md-12
             .form-group

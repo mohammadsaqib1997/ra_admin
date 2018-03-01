@@ -385,7 +385,7 @@ router.post('/login', function (req, res, next) {
                 if (err) {
                     userLoginCheck('email', params, function (err, uid) {
                         if (err) {
-                            res.json({status: 'failed', message: "Invalid Credentials!"});
+                            res.json({status: 'failed', message: err});
                         } else {
                             userLoginToken(uid, function (err, token) {
                                 if (err) {
@@ -586,6 +586,7 @@ function userInsert(params, callback) {
 function userLoginCheck(field, params, callback) {
     userRef.orderByChild(field).equalTo(params['email']).once('value').then(function (userSnap) {
         let userData = userSnap.val();
+        let err = "Invalid Credentials!";
         if (userData !== null) {
             let keys = Object.keys(userData);
             let userExist = false;
@@ -593,6 +594,12 @@ function userLoginCheck(field, params, callback) {
             keys.forEach(function (key) {
                 let row = userData[key];
                 if (row.type === params['type'] && bcrypt.compareSync(params['password'], row.password)) {
+                    if(typeof row.blocked !== 'undefined') {
+                        if(row.blocked === true) {
+                            err = "Your account is blocked!";
+                            return false;
+                        }
+                    }
                     grabUID = key;
                     userExist = true;
                     return false;
@@ -601,10 +608,10 @@ function userLoginCheck(field, params, callback) {
             if (userExist) {
                 callback(false, grabUID);
             } else {
-                callback("No User Found");
+                callback(err);
             }
         } else {
-            callback("No User Found");
+            callback(err);
         }
     });
 }

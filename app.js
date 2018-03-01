@@ -14,7 +14,7 @@ var admin_firebase = require("firebase-admin");
 var serviceAccount = require("./config/serviceAccountKey.json");
 admin_firebase.initializeApp({
     credential: admin_firebase.credential.cert(serviceAccount),
-    databaseURL: "https://radioapp-a8558.firebaseio.com"
+    databaseURL: require('./config/private.json').config_fb.databaseURL
 });
 
 var api = require('./routes/api');

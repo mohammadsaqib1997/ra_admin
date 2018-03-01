@@ -114,7 +114,7 @@ export default {
             return Validator.value(value).required().digit().lengthBetween(4, 4, "Invalid Year!");
         },
         'formdata.vehicle_number': function (value) {
-            return Validator.value(value).required().lengthBetween(7, 7, "Invalid Vehicle Number!");
+            return Validator.value(value).required().lengthBetween(7, 8, "Invalid Vehicle Number!");
         },
         'formdata.make': function (value) {
             return Validator.value(value).required().minLength(3).maxLength(20);
