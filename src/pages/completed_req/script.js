@@ -30,6 +30,8 @@ export default {
                     self.all.push(reqData);
                     process_complete++;
                     if(dataKeys.length === process_complete){
+
+
                         self.all.forEach(function (val,i) {
                             let split_date = val.createdAt.split(" ")[2];
                             let second_split_date = split_date.split("/");
@@ -41,6 +43,20 @@ export default {
                                 self.week.push(val);
                             }
                         });
+
+                        if (self.all.length > 10) {
+                            console.log("Length is gretaer the 10");
+                            self.dataToShow = self.all.slice(0, 10);
+                            self.currentlyShowing = self.dataToShow.length;
+                            self.isNextAvaliable = true;
+                        }
+                        else {
+                            self.dataToShow = self.all;
+                            console.log("Length is gretaer the 10");
+                        }
+                        self.isPrevAvaliable = false;
+
+
                         self.dataLoad = false;
                     }
                 });
@@ -59,6 +75,12 @@ export default {
             search_table1: "",
             search_table2: "",
             search_table3: "",
+
+            currentlyShowing: 0,
+            dataToShow: [],
+            isNextAvaliable: false,
+            isPrevAvaliable: false,
+            counter: 1,
         }
     },
     watch: {
@@ -73,6 +95,27 @@ export default {
         },
     },
     methods: {
+
+        btnNext: function () {
+            let self = this;
+            self.dataToShow = self.all.slice(self.currentlyShowing,self.currentlyShowing+10);
+            self.currentlyShowing += self.dataToShow.length;
+            if(self.all.length <= self.currentlyShowing){
+                self.isNextAvaliable = false;
+            }
+            self.isPrevAvaliable = true;
+        },
+        btnPrev: function () {
+            let self = this;
+            self.currentlyShowing -= self.dataToShow.length;
+            self.dataToShow = self.all.slice(self.all.length-self.dataToShow.length-10,self.all.length-self.dataToShow.length);
+
+            self.isNextAvaliable = true;
+            if( self.currentlyShowing - self.dataToShow.length <= 0){
+                self.isPrevAvaliable = false;
+            }
+        },
+
 
     }
 }

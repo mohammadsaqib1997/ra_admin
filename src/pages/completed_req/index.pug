@@ -84,6 +84,12 @@ aside.right-side
                                                     td {{ row.disText }}
                                                     td {{ row.durText }}
                                                     td {{ row.vecType }}
+                                span.o_pager_value.center-block.pagination-centered.text-center {{counter}}
+                                    |  /
+                                    span.o_pager_limit(style="padding-right: 6px;") 1
+                                    span.btn-group.btn-group-sm
+                                        button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",@click="counter--",style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='p')
+                                        button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext",@click="counter++", style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='n')
                             div.tab-pane#all(role='tabpanel')
                                 div.table-responsive
                                     div.text-center(v-if='dataLoad')
@@ -106,7 +112,7 @@ aside.right-side
                                                     th Duration
                                                     th Vehicle Type
                                             tbody
-                                                tr(v-for='(row, ind) in all')
+                                                tr(v-for='(row, ind) in dataToShow')
                                                     td {{ ind+1 }}
                                                     td {{ row.createdAt }}
                                                     td {{ row.orgText }}
@@ -114,3 +120,9 @@ aside.right-side
                                                     td {{ row.disText }}
                                                     td {{ row.durText }}
                                                     td {{ row.vecType }}
+                                span.o_pager_value.center-block.pagination-centered.text-center {{counter}}
+                                    |  /
+                                    span.o_pager_limit(style="padding-right: 6px;") 2
+                                    span.btn-group.btn-group-sm
+                                        button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",@click="counter--",style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='p')
+                                        button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext",@click="counter++", style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='n')

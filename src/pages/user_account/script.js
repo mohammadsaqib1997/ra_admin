@@ -38,9 +38,26 @@ export default {
                                     self.dataLoad1 = false;
                                 }
                             });
+
+
                         });
+
                     });
+
                 });
+
+
+                console.log(self.invoiceReqData);
+
+
+
+
+
+
+
+
+
+
             }else{
                 self.dataLoad1 = false;
             }
@@ -55,6 +72,12 @@ export default {
             userReqRef: null,
             userRef: null,
             search_table1: "",
+
+            invoiceReqDataLength: 0,
+            currentlyShowing: 0,
+            dataToShow: [],
+            isNextAvaliable: false,
+            isPrevAvaliable: false,
         }
     },
     watch: {
