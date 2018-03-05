@@ -10,11 +10,12 @@ admin.initializeApp({
 const db = admin.database();
 const adda_list_ref = db.ref("adda_list");
 
-// read hear
+// read and insert here
 
 let data = {};
+let ind = 0;
 csv()
-    .fromFile('file_directory/drivers_adda_list.csv')
+    .fromFile('..\\config\\drivers_adda_list.csv')
     .on('json', function (obj) {
         let item = _.values(obj);
         let grab = _.split(item[0], '\t');
@@ -27,9 +28,9 @@ csv()
             }
         });
         if(!err){
-            let key = adda_list_ref.push();
-            data[key.key] = {
-                id: key.key,
+            ind++;
+            data[ind+"a"] = {
+                id: ind+"a",
                 location: {
                     lat: parseFloat(_.replace(grab[4], '"', '')),
                     lng:parseFloat(_.replace(grab[5], '"', ''))

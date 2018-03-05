@@ -35,6 +35,7 @@ export default {
         self.addaListRef.on('value', function (snap) {
             if (snap.val() !== null) {
                 self.data = _.values(snap.val());
+                self.data = _.orderBy(self.data, ['place_name'], ['asc']);
             } else {
                 self.data = [];
             }
