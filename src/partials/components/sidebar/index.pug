@@ -47,10 +47,7 @@ aside.left-side.sidebar-offcanvas
                         router-link(to='/admin/drivers')
                             i.fa.fa-angle-double-right
                             |  List Drivers
-                    li
-                        router-link(to='/admin/drivers/requests')
-                            i.fa.fa-angle-double-right
-                            |  Driver Requests
+
             li.treeview
                 a(href='#')
                     i.fa.fa-truck
@@ -58,9 +55,9 @@ aside.left-side.sidebar-offcanvas
                     i.fa.fa-angle-left.pull-right
                 ul.treeview-menu
                     li
-                        router-link(to='/admin/requests')
+                        router-link(to='/admin/requests/new_requests')
                             i.fa.fa-angle-double-right
-                            |  Requests
+                            |  New Requests
                     li
                         router-link(to='/admin/requests/completed')
                             i.fa.fa-angle-double-right
