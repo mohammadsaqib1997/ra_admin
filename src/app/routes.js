@@ -81,7 +81,7 @@ const routes = [
                         path: 'requests',
                         component: parentComLayout,
                         children: [
-                            {path: 'new_requests', component: newRequests},
+                            {path: '', component: newRequests},
                             {path: 'completed', component: completedRequests},
                             {path: 'pending', component: pendingRequests}
                         ]

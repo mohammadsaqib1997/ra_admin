@@ -16,7 +16,6 @@ const adda_list_ref = db.ref("adda_list");
 const users_ref = db.ref("users");
 
 // read and insert here
-// let adda_ref_id = '-L6WZAtmv_tHqOTf5pRY';
 let data = {};
 let keys = [];
 let processInd = 0;

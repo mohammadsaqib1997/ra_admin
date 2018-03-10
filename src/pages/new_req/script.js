@@ -3,16 +3,16 @@ import func from '../../../custom_libs/func'
 import googleStyle from './style_json.json'
 import _ from 'lodash'
 
-import SimpleVueValidation from 'simple-vue-validator'
-const Validator = SimpleVueValidation.Validator;
+import newRequestListing from '../../partials/components/lists/new_request.vue'
+import progressRequestListing from '../../partials/components/lists/progress_request.vue'
 
 export default {
+    components: {
+        'new_request': newRequestListing,
+        'progress_request': progressRequestListing,
+    },
     created: function () {
         let self = this;
-
-        self.$watch('sel_amount', function (val, oldVal) {
-            self.sel_amount = self.$root.isNumber(val, oldVal, 100000);
-        });
 
         $(function () {
             if (!self.$root.mapLoaded) {
@@ -32,12 +32,6 @@ export default {
     data: function () {
         const db = firebase.database();
         return {
-            dataLoad: true,
-            dataLoad1: true,
-            dataLoad2: true,
-            all: {},
-            reqBidsData: {},
-            driversData: {},
             liveDriverData: {},
 
             userRef: db.ref('/users'),
@@ -52,18 +46,6 @@ export default {
             dMarkers: {},
             addaMarkers: {},
             infoWindows: null,
-            // push bid fields
-            sel_req_id: "",
-            sel_driver: "",
-            sel_amount: 0,
-            mainErr: "",
-            mainMsg: "",
-            insProc: false
-        }
-    },
-    validators: {
-        sel_driver: function (value) {
-            return Validator.value(value).required();
         }
     },
     methods: {
@@ -87,19 +69,24 @@ export default {
             const self = this;
             self.addaListRef.once('value', function (snap) {
                 if (snap.val() !== null) {
-                    let data = snap.val();
                     snap.forEach(function (adda_item) {
                         let key = adda_item.key;
                         let row = adda_item.val();
                         let selLL = new google.maps.LatLng(parseFloat(row.location.lat), parseFloat(row.location.lng));
-                        self.addaMarkers[key] = new google.maps.Marker({
-                            position: selLL,
-                            map: self.map,
-                            icon: {
-                                url: "/images/icons/warehouse.png",
-                                scaledSize: new google.maps.Size(50, 50)
-                            }
+                        self.userRef.orderByChild('adda_ref').equalTo(key).once('value', function (userSnap) {
+                            self.addaMarkers[key] = new google.maps.Marker({
+                                position: selLL,
+                                map: self.map,
+                                label: userSnap.numChildren()+'',
+                                title: row.place_name,
+                                icon: {
+                                    url: "/images/icons/warehouse.png",
+                                    scaledSize: new google.maps.Size(50, 50)
+                                }
+                            });
+
                         });
+
                     });
                 }
             });
@@ -209,8 +196,8 @@ export default {
                 self.checkMarker(obj, self.markers);
                 if (obj !== null) {
                     let keys = Object.keys(obj);
-                    let key_length = keys.length;
-                    let processItem = 0;
+                    //let key_length = keys.length;
+                    //let processItem = 0;
                     let pin = {
                         url: "/images/map_pin.png",
                         scaledSize: new google.maps.Size(35, 35)
@@ -226,13 +213,13 @@ export default {
                             icon: pin
                         });
                         boundbox.extend(selLL);
-                        processItem++;
+                        /*processItem++;
                         if (processItem === key_length) {
                             if (self.dataLoad) {
                                 self.map.setCenter(boundbox.getCenter());
                                 self.map.fitBounds(boundbox);
                             }
-                        }
+                        }*/
                     });
                 }
             }
@@ -245,111 +232,6 @@ export default {
                     delete markerObj[key];
                 }
             });
-        },
-        openBidsReq: function (req_id) {
-            let self = this;
-            self.resetBidForm(self);
-            self.sel_req_id = req_id;
-            self.driverBidsRef.child(req_id).on('value', function (reqBidsSnap) {
-                let bidsData = reqBidsSnap.val();
-                self.dataLoad1 = true;
-                self.reqBidsData = {};
-                if (bidsData !== null) {
-                    let keys = Object.keys(bidsData);
-                    let key_length = keys.length;
-                    let processItem = 0;
-                    keys.forEach(function (row) {
-                        let selBidItem = bidsData[row];
-                        self.userRef.child(row).once('value').then(function (userSnap) {
-                            let userData = userSnap.val();
-                            self.reqBidsData[row] = {
-                                user: userData,
-                                bid_amount: selBidItem.amount
-                            };
-                            processItem++;
-                            if (processItem === key_length) {
-                                self.reqBidsData = func.sortObjByVal(self.reqBidsData, "bid_amount");
-                                self.dataLoad1 = false;
-                            }
-                        });
-                    });
-                } else {
-                    self.dataLoad1 = false;
-                }
-            });
-            self.userRef.orderByChild('type').equalTo('driver').on('value', function (driversSnap) {
-                let driversData = driversSnap.val();
-                if (driversData !== null) {
-                    let keys = Object.keys(driversData);
-                    let key_length = keys.length;
-                    let processItem = 0;
-                    keys.forEach(function (row) {
-                        let selDriver = driversData[row];
-                        //active status check
-                        if(selDriver.status === 1){
-                            self.driversData[row] = {
-                                val: row,
-                                option: selDriver.mob_no + " ~ " + selDriver.first_name + " " + selDriver.last_name
-                            };
-                        }
-
-                        processItem++;
-                        if (processItem === key_length) {
-                            self.dataLoad2 = false;
-                        }
-                    });
-                } else {
-                    self.dataLoad2 = false;
-                }
-            });
-        },
-        placeBid: function () {
-            let self = this;
-            self.$validate().then(function (success) {
-                if (success) {
-                    self.insProc = true;
-                    self.userRef.child(self.sel_driver).once('value').then(function (selDriverSnap) {
-                        let driverData = selDriverSnap.val();
-                        if (driverData !== null) {
-                            self.driverBidsRef.child(self.sel_req_id).child(self.sel_driver).set({
-                                amount: (self.sel_amount).toString()
-                            }, function (err) {
-                                if (err) {
-                                    self.mainErr = err.message;
-                                } else {
-                                    self.resetBidForm(self, true);
-                                }
-                            });
-                        } else {
-                            self.mainErr = "Invalid Driver Select!";
-                        }
-                    });
-                }
-            });
-        },
-        resetBidForm: function (self, success) {
-            success = (typeof self.mainErr !== 'undefined') ? success : false;
-            self.insProc = false;
-            self.sel_driver = "";
-            self.sel_amount = 0;
-            self.validation.reset();
-            self.mainErr = "";
-            if (success) {
-                self.mainMsg = "Successfully place bid!";
-                setTimeout(function () {
-                    self.mainMsg = "";
-                }, 3000);
-            }
-        },
-        cancelReq: function (key) {
-            let self = this;
-            if(confirm("Are You Sure! You want to cancel this request!")){
-                self.liveReqRef.child(self.all[key].liveReqKey).remove(function (err) {
-                    if(err){
-                        console.log(err);
-                    }
-                });
-            }
         },
         loadDriverInfo: function (key) {
             const self = this;

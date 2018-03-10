@@ -1,105 +1,18 @@
 aside.right-side
     section.content-header
-        h1 New Requests
         ol.breadcrumb
             li
                 router-link(to='/')
                     i.fa.fa-dashboard
                     |  Dashboard
             li Deliveries
-            li New Requests
+            li Requests
     section.content
         .row
             .col-xs-12
                 div.map_container
                     #map(ref="map")
-                .box
-                    .box-body
-                        div.table-responsive
-                            div.text-center(v-if='dataLoad')
-                                i.fa.fa-refresh.fa-spin.fa-3x.fa-fw
-                            h3.text-center(style='margin: 15px 0;' v-if='!dataLoad && Object.keys(all).length === 0')
-                                | No Data Found!
-                            table.table.table-hover(v-if='!dataLoad && Object.keys(all).length > 0')
-                                thead
-                                    tr
-                                        th S.No#
-                                        th Date
-                                        th User
-                                        th Origin
-                                        th Destination
-                                        th Distance
-                                        th Duration
-                                        th Parcel
-                                        th Require Vehicle
-                                        th Number Of Bids
-                                        th Action
-                                tbody
-                                    tr(v-for='(row, key, ind) in all')
-                                        td {{ ind+1 }}
-                                        td {{ row.createdAt }}
-                                        td {{ row.username }}
-                                        td {{ row.orgText }}
-                                        td {{ row.desText }}
-                                        td {{ row.disText }}
-                                        td {{ row.durText }}
-                                        td
-                                            a.btn.btn-info.btn-sm(v-bind:href="row.parcelUri" target='_blank')
-                                                i.fa.fa-eye
-                                        td {{ row.vecType }}
-                                        td {{ row.num_bids }}
-                                        td
-                                            button.btn.btn-sm.btn-info(data-toggle='modal' data-target='#push_modal' v-on:click='openBidsReq(key)' style="margin-bottom: 5px;margin-right: 5px;") Push Bids
-                                            button.btn.btn-sm.btn-danger(type="button" v-on:click='cancelReq(key)') Cancel
-    // Modal
-    #push_modal.modal.fade.bs-example-modal-lg(role='dialog')
-        .modal-dialog.modal-lg
-            // Modal content
-            .modal-content
-                .modal-header
-                    button.close(type='button', data-dismiss='modal') ×
-                    h4.modal-title Push Bids
-                .modal-body
-                    div.table-responsive
-                        div.text-center(v-if='dataLoad1')
-                            i.fa.fa-refresh.fa-spin.fa-3x.fa-fw
-                        h3.text-center(style='margin: 15px 0;' v-if='!dataLoad1 && Object.keys(reqBidsData).length === 0')
-                            | No Data Found!
-                        table.table.table-striped.table-bordered(v-if='!dataLoad1 && Object.keys(reqBidsData).length > 0')
-                            thead
-                                tr
-                                    th S.No#
-                                    th Driver Name
-                                    th Vehicle Type
-                                    th Bid Amount
-                            tbody
-                                tr(v-for='(row, key, ind) in reqBidsData')
-                                    td {{ ind+1 }}
-                                    td {{ row.user.first_name+" "+row.user.last_name }}
-                                    td {{ row.user.vehicle }}
-                                    td {{ row.bid_amount }}
-                    .row
-                        .col-md-6
-                            div.text-center(v-if='dataLoad2')
-                                i.fa.fa-refresh.fa-spin.fa-3x.fa-fw
-                            template(v-if='!dataLoad2')
-                                h3 New Bid
-                                form(v-on:submit.prevent='placeBid' method='post')
-                                    p.alert.alert-danger(v-if='mainErr !== ""') {{ mainErr }}
-                                    p.alert.alert-success(v-if='mainMsg !== ""') {{ mainMsg }}
-                                    .form-group
-                                        label(for='sel_drivers') Select Driver
-                                        select.form-control(id='sel_drivers' v-model='sel_driver')
-                                            option(value='') Select Driver
-                                            option(v-for='(row, key, ind) in driversData' v-bind:value='row.val') {{ row.option }}
-                                        p.alert.alert-danger(v-if='validation.hasError("sel_driver")') {{ validation.firstError('sel_driver') }}
-                                    .form-group
-                                        label(for='sel_amount') Bid Amount
-                                        input.form-control(type='text' id='sel_amount' v-model='sel_amount' placeholder='Enter Bid Amount')
-                                    .form-group.text-right
-                                        input.btn.btn-success(type='submit' value='Place' v-if='!insProc')
-                                        button.btn.btn-success(type='button' disabled='disabled' v-if='insProc')
-                                            i.fa.fa-refresh.fa-spin.fa-fw
-                .modal-footer
-                    button.btn.btn-default(type='button', data-dismiss='modal') Close
+                new_request
+                progress_request
+
 
