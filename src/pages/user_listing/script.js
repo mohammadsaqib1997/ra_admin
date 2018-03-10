@@ -5,7 +5,9 @@ import moment from 'moment'
 export default {
     created: function () {
         let self = this;
+
         $(function () {
+
             $("body").on('click', '.open_row', function(){
                 let grabLink = $(this).attr("data-url");
                 if(grabLink !== ""){
@@ -38,20 +40,15 @@ export default {
                     }
                 });
                 if (self.data1.length > 10) {
-                    console.log("Length is gretaer the 10");
                     self.dataToShow = self.data1.slice(0, 10);
                     self.currentlyShowing = self.dataToShow.length;
                     self.isNextAvaliable = true;
                 }
                 else {
                     self.dataToShow = self.data1;
-                    console.log("Length is gretaer the 10");
                 }
                 self.isPrevAvaliable = false;
-
             }
-
-
         });
     },
     data: function(){
@@ -64,7 +61,13 @@ export default {
             dataToShow: [],
             isNextAvaliable: false,
             isPrevAvaliable: false,
-            counter: 1
+
+            counter: 1,
+            index: 0,
+            nextindex: 10,
+            show: false,
+            pag: 1,
+
         }
     },
     watch: {
@@ -101,11 +104,45 @@ export default {
             }
         },
 
+        block: function (key, index, event) {
+            event.stopPropagation();
+            let self = this;
+            if(self.userRef){
+                self.userRef.child(key).update({
+                    blocked: true
+                }, function (err) {
+                    if(err){
+                        console.log(err)
+                    }else{
+
+                        self.data1.splice(index, 1);
+                    }
+                });
+            }
+        },
+        unblock: function (key, index, event) {
+            event.stopPropagation();
+            let self = this;
+            if(self.userRef){
+                self.userRef.child(key).update({
+                    blocked: false
+                }, function (err) {
+                    if(err){
+                        console.log(err)
+                    }else{
+
+                        self.data1.splice(index, 1);
+                    }
+                });
+            }
+        },
+
         btnNext: function () {
             let self = this;
-            console.log();
+            self.pag += 10;
             self.dataToShow = self.data1.slice(self.currentlyShowing,self.currentlyShowing+10);
             self.currentlyShowing += self.dataToShow.length;
+            self.counter++;
             if(self.data1.length <= self.currentlyShowing){
                 self.isNextAvaliable = false;
             }
@@ -113,10 +150,12 @@ export default {
         },
         btnPrev: function () {
             let self = this;
+            self.pag -= 10;
             self.currentlyShowing -= self.dataToShow.length;
             self.dataToShow = self.data1.slice(self.data1.length-self.dataToShow.length-10,self.data1.length-self.dataToShow.length);
 
             self.isNextAvaliable = true;
+            self.counter--;
             if( self.currentlyShowing - self.dataToShow.length <= 0){
                 self.isPrevAvaliable = false;
             }

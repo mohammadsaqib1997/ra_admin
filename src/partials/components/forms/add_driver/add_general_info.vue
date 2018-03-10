@@ -21,9 +21,9 @@
                     .form-group
                         label(for='email') Email
                         input.form-control(type='email' id='email' v-model.trim='email' placeholder='Eg: example@gmail.com')
-                        div.text-right(v-if='validation.isValidating("email")')
-                            i.fa.fa-spinner.fa-spin
-                        p.text-danger.text-right(v-if='validation.hasError("email")') {{ validation.firstError('email') }}
+                        <!--div.text-right(v-if='validation.isValidating("email")')-->
+                            <!--i.fa.fa-spinner.fa-spin-->
+                        <!--p.text-danger.text-right(v-if='validation.hasError("email")') {{ validation.firstError('email') }}-->
                 .col-md-6
                     .form-group
                         label(for='password') Password
@@ -45,12 +45,12 @@
                     .form-group
                         label(for='cnic_number') CNIC No.
                         input.form-control(type='text' id='cnic_number' v-model.trim='cnic_number' placeholder='Eg: 3172457197361 (Without Dashes)')
-                        p.text-danger.text-right(v-if='validation.hasError("cnic_number")') {{ validation.firstError('cnic_number') }}
+                        <!--p.text-danger.text-right(v-if='validation.hasError("cnic_number")') {{ validation.firstError('cnic_number') }}-->
                 .col-md-12
                     .form-group
                         label(for='driving_license') Driving License
                         input.form-control(type='text' id='driving_license' v-model.trim='driving_license' placeholder='Eg: 3172457197361#832 (Without Dashes)')
-                        p.text-danger.text-right(v-if='validation.hasError("driving_license")') {{ validation.firstError('driving_license') }}
+                        <!--p.text-danger.text-right(v-if='validation.hasError("driving_license")') {{ validation.firstError('driving_license') }}-->
                 .col-md-6
                     .form-group
                         label(for='sel_adda') Select Adda
@@ -58,13 +58,13 @@
                             option(value="") Select Adda
                             option(v-for="adda in addaListData" v-bind:value="adda.id") {{ adda.place_name }}
                         p.text-danger.text-right(v-if='validation.hasError("sel_adda")') {{ validation.firstError('sel_adda') }}
-                .col-md-6
-                    .form-group(style="margin-left: 20px;")
-                        label Offline Driver
-                        .checkbox.text-left
-                            label
-                                input.ml-0(type='checkbox' v-model="offline_driver")
-                                | &nbsp;{{ (offline_driver) ? 'Yes':'No' }}
+                <!--.col-md-6-->
+                    <!--.form-group(style="margin-left: 20px;")-->
+                        <!--label Offline Driver-->
+                        <!--.checkbox.text-left-->
+                            <!--label-->
+                                <!--input.ml-0(type='checkbox' v-model="offline_driver")-->
+                                <!--| &nbsp;{{ (offline_driver) ? 'Yes':'No' }}-->
         .box-footer
             .text-right(v-if="!formUtil.submitted")
                 button(type='button' v-on:click.prevent="submit" v-if="!formUtil.process").btn.btn-success Submit

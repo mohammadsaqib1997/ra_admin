@@ -34,25 +34,34 @@ aside.right-side
                                         th S.No#
                                         th Driver Name
                                         th Driver Email
+                                        th Profile
                                         th Mobile#
                                         th CNIC#
                                         th Vehicle Type
                                         th Created Time
                                         th Action
+                                        th status
                                 tbody
                                     tr.open_row(v-for="(row, ind) in dataToShow" v-bind:data-url="'/admin/drivers/profile/'+row.key")
-                                        td {{ ind+1 }}
+                                        td {{ pag+ind }}
                                         td {{ row.first_name }} {{ row.last_name }}
                                         td {{ row.email }}
+                                        td {{ row.status }}
                                         td {{ row.mob_no }}
                                         td {{ row.cnic_no }}
                                         td {{ row.vehicle }}
                                         td {{ row.time }}
                                         td
-                                            button.btn.btn-danger.btn-xs(v-on:click.prevet='deActive(row.key, ind, $event)') Deactivate
+                                            button.btn.btn-success.btn-xs(v-on:click.prevet='active(row.key, ind, $event)' v-if='row.status === 0') Activate
+                                            button.btn.btn-danger.btn-xs(v-on:click.prevet='deActive(row.key, ind, $event)' v-else) Deactivate
+
+                                        td
+                                            button.btn.btn-primary.btn-sm(type="button", v-on:click.prevent='block(row.key, ind, $event)' v-if='row.blocked === false') Block
+                                            button.btn.btn-primary.btn-sm(type="button", v-on:click.prevent='unblock(row.key, ind, $event)' v-else ) UnBlock
+
                 span.o_pager_value.center-block.pagination-centered.text-center {{counter}}
                     |  /
-                    span.o_pager_limit(style="padding-right: 6px;") 2
+                    span.o_pager_limit(style="padding-right: 6px;") 59
                     span.btn-group.btn-group-sm
-                        button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",@click="counter--",style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='p')
-                        button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext",@click="counter++", style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='n')
+                        button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",style='background-color:white;border-color: #adadad;color: #4c4c4c;',type='button', accesskey='p')
+                        button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext", style='background-color:white;border-color: #adadad;color: #4c4c4c;',type='button', accesskey='n')

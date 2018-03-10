@@ -75,7 +75,7 @@
                                             th Logout Date/Time
                                             th Duration
                                     tbody
-                                        tr(v-for="log in allLogs")
+                                        tr(v-for="log in dataToShow")
                                             td {{ log.loginTime }}
                                             td {{ log.logoutTime }}
                                             td {{ timeFormat(log.duration) }}
@@ -83,6 +83,12 @@
                                         tr
                                             td.text-right(colspan='2') Total Spent Time
                                             td {{ timeFormat(allLogsTSTime) }}
+                        span.o_pager_value.center-block.pagination-centered.text-center {{counter}}
+                            |  /
+                            span.o_pager_limit(style="padding-right: 6px;") 38
+                            span.btn-group.btn-group-sm
+                                button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",style='background-color:white;border-color: #adadad;color: #4c4c4c;',type='button', accesskey='p')
+                                button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext" style='background-color:white;border-color: #adadad;color: #4c4c4c;',type='button',accesskey='n')
 </template>
 
 <script>
@@ -118,6 +124,17 @@
                             self.allLogsTSTime.add(data_set.duration);
                             self.allLogs.push(data_set);
                         });
+                        if (self.allLogs.length > 10) {
+                            console.log("Length is gretaer the 10");
+                            self.dataToShow = self.allLogs.slice(0, 10);
+                            self.currentlyShowing = self.dataToShow.length;
+                            self.isNextAvaliable = true;
+                        }
+                        else {
+                            self.dataToShow = self.allLogs;
+                            console.log("Length is gretaer the 10");
+                        }
+                        self.isPrevAvaliable = false;
                     }
                     self.loading = false;
                 });
@@ -136,10 +153,40 @@
                 allLogs: [],
                 todayLogsTSTime: moment.duration(),
                 weekLogsTSTime: moment.duration(),
-                allLogsTSTime: moment.duration()
+                allLogsTSTime: moment.duration(),
+
+
+                currentlyShowing: 0,
+                dataToShow: [],
+                isNextAvaliable: false,
+                isPrevAvaliable: false,
+                counter: 1,
             }
         },
         methods: {
+            btnNext: function () {
+                let self = this;
+                self.dataToShow = self.allLogs.slice(self.currentlyShowing,self.currentlyShowing+10);
+                self.currentlyShowing += self.dataToShow.length;
+                self.counter++;
+                if(self.allLogs.length <= self.currentlyShowing){
+                    self.isNextAvaliable = false;
+                }
+                self.isPrevAvaliable = true;
+            },
+            btnPrev: function () {
+                let self = this;
+                self.currentlyShowing -= self.dataToShow.length;
+                self.dataToShow = self.allLogs.slice(self.allLogs.length-self.dataToShow.length-10,self.allLogs.length-self.dataToShow.length);
+
+                self.isNextAvaliable = true;
+                self.counter--;
+                if( self.currentlyShowing - self.dataToShow.length <= 0){
+                    self.isPrevAvaliable = false;
+                }
+            },
+
+
             filterLogs: function (self, allLogs) {
                 self.todayLogs = [];
                 self.weekLogs = [];

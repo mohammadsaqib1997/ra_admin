@@ -38,26 +38,19 @@ export default {
                                     self.dataLoad1 = false;
                                 }
                             });
-
-
                         });
 
                     });
-
                 });
-
-
-                console.log(self.invoiceReqData);
-
-
-
-
-
-
-
-
-
-
+                if (self.invoiceReqData.length > 10) {
+                    self.dataToShow = self.invoiceReqData.slice(0, 10);
+                    self.currentlyShowing = self.dataToShow.length;
+                    self.isNextAvaliable = true;
+                }
+                else {
+                    self.dataToShow = self.invoiceReqData;
+                }
+                self.isPrevAvaliable = false;
             }else{
                 self.dataLoad1 = false;
             }
@@ -72,12 +65,14 @@ export default {
             userReqRef: null,
             userRef: null,
             search_table1: "",
-
+            data1: [],
             invoiceReqDataLength: 0,
             currentlyShowing: 0,
             dataToShow: [],
             isNextAvaliable: false,
             isPrevAvaliable: false,
+            counter: 1,
+            pag: 1,
         }
     },
     watch: {
@@ -86,6 +81,26 @@ export default {
         }
     },
     methods: {
+        btnNext: function () {
+            let self = this;
+            self.dataToShow = self.invoiceReqData.slice(self.currentlyShowing,self.currentlyShowing+10);
+            self.currentlyShowing += self.dataToShow.length;
+            self.counter++;
+            if(self.invoiceReqData.length <= self.currentlyShowing){
+                self.isNextAvaliable = false;
+            }
+            self.isPrevAvaliable = true;
+        },
+        btnPrev: function () {
+            let self = this;
+            self.currentlyShowing -= self.dataToShow.length;
+            self.dataToShow = self.invoiceReqData.slice(self.invoiceReqData.length-self.dataToShow.length-10,self.invoiceReqData.length-self.dataToShow.length);
 
+            self.isNextAvaliable = true;
+            self.counter--;
+            if( self.currentlyShowing - self.dataToShow.length <= 0){
+                self.isPrevAvaliable = false;
+            }
+        },
     }
 }

@@ -40,6 +40,17 @@ export default {
                 self.data = [];
             }
             self.dataLoad = false;
+            if (self.data.length > 10) {
+                console.log("Length is gretaer the 10");
+                self.dataToShow = self.data.slice(0, 10);
+                self.currentlyShowing = self.dataToShow.length;
+                self.isNextAvaliable = true;
+            }
+            else {
+                self.dataToShow = self.data;
+                console.log("Length is gretaer the 10");
+            }
+            self.isPrevAvaliable = false;
         });
     },
     destroyed() {
@@ -56,7 +67,14 @@ export default {
             data: [],
             addaListRef: db.ref('adda_list'),
             search_table: '',
-            removeID: ""
+            removeID: "",
+
+            currentlyShowing: 0,
+            dataToShow: [],
+            isNextAvaliable: false,
+            isPrevAvaliable: false,
+            counter: 1,
+            pag: 1,
         }
     },
     watch: {
@@ -66,6 +84,7 @@ export default {
         }
     },
     methods: {
+
         toTitleCase(str) {
             return str.replace(/\w\S*/g, function (txt) {
                 return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -133,6 +152,30 @@ export default {
         },
         moveEdit (key) {
             this.$router.push('/admin/adda/edit/'+key);
-        }
+        },
+
+        btnNext: function (last) {
+            let self = this;
+            self.pag += 10;
+            self.dataToShow = self.data.slice(self.currentlyShowing,self.currentlyShowing+10);
+            self.currentlyShowing += self.dataToShow.length;
+            self.counter++;
+            if(self.data.length <= self.currentlyShowing){
+                self.isNextAvaliable = false;
+            }
+            self.isPrevAvaliable = true;
+        },
+        btnPrev: function () {
+            let self = this;
+            self.pag -= 10;
+            self.currentlyShowing -= self.dataToShow.length;
+            self.dataToShow = self.data.slice(self.data.length-self.dataToShow.length-10,self.data.length-self.dataToShow.length);
+
+            self.isNextAvaliable = true;
+            self.counter--;
+            if( self.currentlyShowing - self.dataToShow.length <= 0){
+                self.isPrevAvaliable = false;
+            }
+        },
     }
 }

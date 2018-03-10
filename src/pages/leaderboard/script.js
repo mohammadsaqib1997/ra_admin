@@ -24,7 +24,14 @@ export default {
             data: [],
             loader: true,
             months_sel: months_sel,
-            selected_m: months_sel[0].unix
+            selected_m: months_sel[0].unix,
+
+            currentlyShowing: 0,
+            dataToShow: [],
+            isNextAvaliable: false,
+            isPrevAvaliable: false,
+            counter: 1,
+            pag: 1,
         }
     },
     watch: {
@@ -35,13 +42,48 @@ export default {
             this.dataByMonth(_.find(this.months_sel, {unix: val}).mm, this.data, 'loader');
         },
         loader (val) {
+            let self = this;
             if (val === false) {
                 this.data = _.orderBy(this.data, ['points', 'time.m', 'rating', 'earning', 'bids'], ['desc', 'desc', 'desc', 'desc', 'desc']);
                 this.profileImgUrlSet([this.data[0].id, this.data[1].id, this.data[2].id]);
             }
+            if (self.data.length > 10) {
+                self.dataToShow = self.data.slice(0, 10);
+                self.currentlyShowing = self.dataToShow.length;
+                self.isNextAvaliable = true;
+            }
+            else {
+                self.dataToShow = self.data;
+            }
+            self.isPrevAvaliable = false;
         }
     },
     methods: {
+        btnNext: function () {
+            let self = this;
+            self.pag += 10;
+            self.dataToShow = self.data.slice(self.currentlyShowing,self.currentlyShowing+10);
+            self.currentlyShowing += self.dataToShow.length;
+            self.counter++;
+            if(self.data.length <= self.currentlyShowing){
+                self.isNextAvaliable = false;
+            }
+            self.isPrevAvaliable = true;
+
+        },
+        btnPrev: function () {
+            let self = this;
+            self.pag -= 10;
+            self.currentlyShowing -= self.dataToShow.length;
+            self.dataToShow = self.data.slice(self.data.length-self.dataToShow.length-10,self.data.length-self.dataToShow.length);
+
+            self.isNextAvaliable = true;
+            self.counter--;
+            if( self.currentlyShowing - self.dataToShow.length <= 0){
+                self.isPrevAvaliable = false;
+            }
+
+        },
         complete_pros (push_row, ind, tot_length, setData, loader) {
             if(push_row !== null){
                 setData.push(push_row);

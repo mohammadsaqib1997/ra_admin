@@ -19,6 +19,7 @@ export default {
             if (renderData !== null) {
                 renderData['key'] = snap.key;
                 self.userData = renderData;
+
             } else {
                 self.$router.push('/admin');
             }
@@ -26,6 +27,9 @@ export default {
     },
     data(){
         return {
+            currentlyShowing: 0,
+            dataToShow: [],
+
             dataLoad: true,
             dataLoad1: true,
             dataLoad2: true,
@@ -82,6 +86,9 @@ export default {
         }
     },
     methods: {
+
+
+
         deActive: function (key) {
             let self = this;
             if (self.userRef) {

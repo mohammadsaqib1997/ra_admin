@@ -18,17 +18,17 @@
                     .form-group
                         label(for='model_year') Model Year
                         input.form-control(type='text' id='model_year' v-model='model_year' placeholder='Eg: 2008')
-                        p.text-danger.text-right(v-if='validation.hasError("model_year")') {{ validation.firstError('model_year') }}
+                        <!--p.text-danger.text-right(v-if='validation.hasError("model_year")') {{ validation.firstError('model_year') }}-->
                 .col-md-6
                     .form-group
                         label(for='vehicle_number') Vehicle Number
                         input.form-control(type='text' id='vehicle_number' v-model='vehicle_number' placeholder='Eg: BEL-923')
-                        p.text-danger.text-right(v-if='validation.hasError("vehicle_number")') {{ validation.firstError('vehicle_number') }}
+                        <!--p.text-danger.text-right(v-if='validation.hasError("vehicle_number")') {{ validation.firstError('vehicle_number') }}-->
                 .col-md-12
                     .form-group
                         label(for='make') Make
                         input.form-control(type='text' id='make' v-model='make' placeholder='Eg: Honda')
-                        p.text-danger.text-right(v-if='validation.hasError("make")') {{ validation.firstError('make') }}
+                        <!--p.text-danger.text-right(v-if='validation.hasError("make")') {{ validation.firstError('make') }}-->
                 .col-md-12
                     .form-group(style="margin-left: 20px;")
                         .checkbox.text-left
