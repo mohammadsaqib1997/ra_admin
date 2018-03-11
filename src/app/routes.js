@@ -18,7 +18,6 @@ import userList from '../pages/user_listing/user_listing.vue'
 import user_profile from '../pages/user_profile/user_profile.vue'
 
 import completedRequests from '../pages/completed_req/completed_req.vue'
-import pendingRequests from '../pages/pending_req/pending_req.vue'
 import newRequests from '../pages/new_req/new_req.vue'
 
 import userAccount from '../pages/user_account/user_account.vue'
@@ -82,8 +81,7 @@ const routes = [
                         component: parentComLayout,
                         children: [
                             {path: '', component: newRequests},
-                            {path: 'completed', component: completedRequests},
-                            {path: 'pending', component: pendingRequests}
+                            {path: 'completed', component: completedRequests}
                         ]
                     },
                     {

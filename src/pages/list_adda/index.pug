@@ -24,21 +24,17 @@ aside.right-side
                             | No Data Found!
                         template(v-if='!dataLoad && data.length > 0')
                             .row
-                                .col-md-3
-                                    .form-group
-                                        input.form-control(type='text' placeholder='Search' v-model='search_table')
-                            .row
                                 .col-md-6
                                     .table-responsive
-                                        table.table.table-hover.table-click(ref='table')
-                                            thead
+                                        table_comp(v-bind:per_page="10")
+                                            template(slot="thead")
                                                 tr
                                                     th.small_cell S.No#
                                                     th Adda Name
                                                     th Actions
-                                            tbody
-                                                tr.view_row(v-for="(row, ind) in dataToShow" v-bind:data-id="row.id")
-                                                    td.small_cell {{ ind+pag }}
+                                            template(slot="tbody")
+                                                tr.view_row(v-for="(row, ind) in data" v-bind:data-id="row.id")
+                                                    td.small_cell {{ ind+1 }}
                                                     td {{ toTitleCase(row.place_name) }}
                                                     td
                                                         button.btn.btn-danger.btn-sm(type='button' style="margin-right: 5px;" v-on:click.stop="showPopup(row.id)")
@@ -50,9 +46,3 @@ aside.right-side
                                     h4 Adda Name: {{ (viewData) ? toTitleCase(viewData.place_name):'' }}
                                     h4 Location
                                     #map
-                span.o_pager_value.center-block.pagination-centered.text-center {{counter}}
-                    |  /
-                    span.o_pager_limit(style="padding-right: 6px;") 8
-                    span.btn-group.btn-group-sm
-                        button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",style='background-color:white;border-color: #adadad;color: #4c4c4c;', type='button', accesskey='p')
-                        button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext(lastIndex)", style='background-color:white;border-color: #adadad;color: #4c4c4c;', type='button', accesskey='n')

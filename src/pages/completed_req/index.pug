@@ -29,12 +29,8 @@ aside.right-side
                                     h3.text-center(style='margin: 15px 0;' v-if='!dataLoad && today.length === 0')
                                         | No Data Found!
                                     template(v-if='!dataLoad && today.length > 0')
-                                        .row
-                                            .col-md-3.col-md-offset-9
-                                                .form-group
-                                                    input.form-control(type='text' placeholder='Search' v-model='search_table1')
-                                        table.table.table-hover(ref='table1')
-                                            thead
+                                        table_comp(v-bind:per_page="10")
+                                            template(slot="thead")
                                                 tr
                                                     th S.No#
                                                     th Date
@@ -44,7 +40,7 @@ aside.right-side
                                                     th Duration
                                                     //th Parcel
                                                     th Vehicle Type
-                                            tbody
+                                            template(slot="tbody")
                                                 tr(v-for='(row, ind) in today')
                                                     td {{ ind+1 }}
                                                     td {{ row.createdAt }}
@@ -60,12 +56,8 @@ aside.right-side
                                     h3.text-center(style='margin: 15px 0;' v-if='!dataLoad && week.length === 0')
                                         | No Data Found!
                                     template(v-if='!dataLoad && week.length > 0')
-                                        .row
-                                            .col-md-3.col-md-offset-9
-                                                .form-group
-                                                    input.form-control(type='text' placeholder='Search' v-model='search_table2')
-                                        table.table.table-hover(ref='table2')
-                                            thead
+                                        table_comp(v-bind:per_page="10")
+                                            template(slot="thead")
                                                 tr
                                                     th S.No#
                                                     th Date
@@ -75,7 +67,7 @@ aside.right-side
                                                     th Duration
                                                     //th Parcel
                                                     th Vehicle Type
-                                            tbody
+                                            template(slot="tbody")
                                                 tr(v-for='(row, ind) in week')
                                                     td {{ ind+1 }}
                                                     td {{ row.createdAt }}
@@ -84,12 +76,6 @@ aside.right-side
                                                     td {{ row.disText }}
                                                     td {{ row.durText }}
                                                     td {{ row.vecType }}
-                                span.o_pager_value.center-block.pagination-centered.text-center {{counter}}
-                                    |  /
-                                    span.o_pager_limit(style="padding-right: 6px;") 1
-                                    span.btn-group.btn-group-sm
-                                        button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",@click="counter--",style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='p')
-                                        button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext",@click="counter++", style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='n')
                             div.tab-pane#all(role='tabpanel')
                                 div.table-responsive
                                     div.text-center(v-if='dataLoad')
@@ -97,12 +83,8 @@ aside.right-side
                                     h3.text-center(style='margin: 15px 0;' v-if='!dataLoad && all.length === 0')
                                         | No Data Found!
                                     template(v-if='!dataLoad && all.length > 0')
-                                        .row
-                                            .col-md-3.col-md-offset-9
-                                                .form-group
-                                                    input.form-control(type='text' placeholder='Search' v-model='search_table3')
-                                        table.table.table-hover(ref='table3')
-                                            thead
+                                        table_comp(v-bind:per_page="10")
+                                            template(slot="thead")
                                                 tr
                                                     th S.No#
                                                     th Date
@@ -111,8 +93,8 @@ aside.right-side
                                                     th Distance
                                                     th Duration
                                                     th Vehicle Type
-                                            tbody
-                                                tr(v-for='(row, ind) in dataToShow')
+                                            template(slot="tbody")
+                                                tr(v-for='(row, ind) in all')
                                                     td {{ ind+1 }}
                                                     td {{ row.createdAt }}
                                                     td {{ row.orgText }}
@@ -120,9 +102,3 @@ aside.right-side
                                                     td {{ row.disText }}
                                                     td {{ row.durText }}
                                                     td {{ row.vecType }}
-                                span.o_pager_value.center-block.pagination-centered.text-center {{counter}}
-                                    |  /
-                                    span.o_pager_limit(style="padding-right: 6px;") 2
-                                    span.btn-group.btn-group-sm
-                                        button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",@click="counter--",style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='p')
-                                        button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext",@click="counter++", style='background-color:white;border-color: #adadad;color: #4c4c4c;')(type='button', accesskey='n')

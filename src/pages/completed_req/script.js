@@ -1,12 +1,14 @@
 import firebase from 'firebase'
 import func from '../../../custom_libs/func'
 
+import tableComp from '../../partials/components/html_utils/tabel_comp.vue'
+
 export default {
+    components: {
+        'table_comp': tableComp
+    },
     created: function () {
         let self = this;
-        $(function () {
-
-        });
 
         const db = firebase.database();
         self.userRef = db.ref('/users');
@@ -31,7 +33,6 @@ export default {
                     process_complete++;
                     if(dataKeys.length === process_complete){
 
-
                         self.all.forEach(function (val,i) {
                             let split_date = val.createdAt.split(" ")[2];
                             let second_split_date = split_date.split("/");
@@ -43,19 +44,6 @@ export default {
                                 self.week.push(val);
                             }
                         });
-
-                        if (self.all.length > 10) {
-                            console.log("Length is gretaer the 10");
-                            self.dataToShow = self.all.slice(0, 10);
-                            self.currentlyShowing = self.dataToShow.length;
-                            self.isNextAvaliable = true;
-                        }
-                        else {
-                            self.dataToShow = self.all;
-                            console.log("Length is gretaer the 10");
-                        }
-                        self.isPrevAvaliable = false;
-
 
                         self.dataLoad = false;
                     }
@@ -72,50 +60,6 @@ export default {
             userRef: null,
             userReqRef: null,
             completeReqRef: null,
-            search_table1: "",
-            search_table2: "",
-            search_table3: "",
-
-            currentlyShowing: 0,
-            dataToShow: [],
-            isNextAvaliable: false,
-            isPrevAvaliable: false,
-            counter: 1,
         }
-    },
-    watch: {
-        search_table1: function (val) {
-            func.tableSearch(this.$refs.table1, val);
-        },
-        search_table2: function (val) {
-            func.tableSearch(this.$refs.table2, val);
-        },
-        search_table3: function (val) {
-            func.tableSearch(this.$refs.table3, val);
-        },
-    },
-    methods: {
-
-        btnNext: function () {
-            let self = this;
-            self.dataToShow = self.all.slice(self.currentlyShowing,self.currentlyShowing+10);
-            self.currentlyShowing += self.dataToShow.length;
-            if(self.all.length <= self.currentlyShowing){
-                self.isNextAvaliable = false;
-            }
-            self.isPrevAvaliable = true;
-        },
-        btnPrev: function () {
-            let self = this;
-            self.currentlyShowing -= self.dataToShow.length;
-            self.dataToShow = self.all.slice(self.all.length-self.dataToShow.length-10,self.all.length-self.dataToShow.length);
-
-            self.isNextAvaliable = true;
-            if( self.currentlyShowing - self.dataToShow.length <= 0){
-                self.isPrevAvaliable = false;
-            }
-        },
-
-
     }
 }

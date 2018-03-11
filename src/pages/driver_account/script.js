@@ -1,7 +1,12 @@
 import firebase from 'firebase'
 import func from '../../../custom_libs/func'
 
+import tableComp from '../../partials/components/html_utils/tabel_comp.vue'
+
 export default {
+    components: {
+        'table_comp': tableComp
+    },
     created: function () {
         let self = this;
         const db = firebase.database();
@@ -91,19 +96,6 @@ export default {
             driverComInvoiceRef: null,
             userReqRef: null,
             userRef: null,
-            search_table1: "",
-            search_table2: "",
         }
-    },
-    watch: {
-        search_table1: function (val) {
-            func.tableSearch(this.$refs.table1, val);
-        },
-        search_table2: function (val) {
-            func.tableSearch(this.$refs.table2, val);
-        },
-    },
-    methods: {
-        
     }
 }

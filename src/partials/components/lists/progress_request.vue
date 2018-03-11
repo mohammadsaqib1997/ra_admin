@@ -8,8 +8,8 @@
                     i.fa.fa-refresh.fa-spin.fa-3x.fa-fw
                 h3.text-center(style='margin: 15px 0;' v-if='!dataLoad && all.length === 0')
                     | No Data Found!
-                table.table.table-hover(v-if='!dataLoad && all.length > 0')
-                    thead
+                table_comp(v-if='!dataLoad && all.length > 0' v-bind:per_page="10")
+                    template(slot="thead")
                         tr
                             th S.No#
                             th Date
@@ -19,7 +19,7 @@
                             th Duration
                             th Require Vehicle
                             th Action
-                    tbody
+                    template(slot="tbody")
                         tr(v-for='(row, ind) in all')
                             td {{ ind+1 }}
                             td {{ row.req_data.createdAt }}
@@ -43,8 +43,13 @@
     import firebase from 'firebase'
     import moment from 'moment'
 
+    import tableComp from '../html_utils/tabel_comp.vue'
+
     export default {
         name: "progress_request",
+        components: {
+            'table_comp': tableComp
+        },
         created () {
             this.loadPendRequest();
         },

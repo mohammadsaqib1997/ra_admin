@@ -1,7 +1,12 @@
 import firebase from 'firebase'
 import func from '../../../custom_libs/func'
 
+import tableComp from '../../partials/components/html_utils/tabel_comp.vue'
+
 export default {
+    components: {
+        'table_comp': tableComp
+    },
     created: function () {
         let self = this;
         const db = firebase.database();
@@ -10,7 +15,7 @@ export default {
         self.userRef = db.ref('/users');
         self.userReqInvoiceRef.orderByKey().once('value').then(function (userReqInvoiceSnap) {
             let userReqInvoiceData = userReqInvoiceSnap.val();
-            if(userReqInvoiceData !== null){
+            if (userReqInvoiceData !== null) {
                 let keys = Object.keys(userReqInvoiceData);
                 let key_length = keys.length;
                 let processItem = 0;
@@ -42,21 +47,12 @@ export default {
 
                     });
                 });
-                if (self.invoiceReqData.length > 10) {
-                    self.dataToShow = self.invoiceReqData.slice(0, 10);
-                    self.currentlyShowing = self.dataToShow.length;
-                    self.isNextAvaliable = true;
-                }
-                else {
-                    self.dataToShow = self.invoiceReqData;
-                }
-                self.isPrevAvaliable = false;
-            }else{
+            } else {
                 self.dataLoad1 = false;
             }
         });
     },
-    data: function(){
+    data: function () {
         return {
             dataLoad1: true,
             invoiceReqData: {},
@@ -64,43 +60,7 @@ export default {
             userReqInvoiceRef: null,
             userReqRef: null,
             userRef: null,
-            search_table1: "",
-            data1: [],
             invoiceReqDataLength: 0,
-            currentlyShowing: 0,
-            dataToShow: [],
-            isNextAvaliable: false,
-            isPrevAvaliable: false,
-            counter: 1,
-            pag: 1,
         }
     },
-    watch: {
-        search_table1: function (val) {
-            func.tableSearch(this.$refs.table1, val);
-        }
-    },
-    methods: {
-        btnNext: function () {
-            let self = this;
-            self.dataToShow = self.invoiceReqData.slice(self.currentlyShowing,self.currentlyShowing+10);
-            self.currentlyShowing += self.dataToShow.length;
-            self.counter++;
-            if(self.invoiceReqData.length <= self.currentlyShowing){
-                self.isNextAvaliable = false;
-            }
-            self.isPrevAvaliable = true;
-        },
-        btnPrev: function () {
-            let self = this;
-            self.currentlyShowing -= self.dataToShow.length;
-            self.dataToShow = self.invoiceReqData.slice(self.invoiceReqData.length-self.dataToShow.length-10,self.invoiceReqData.length-self.dataToShow.length);
-
-            self.isNextAvaliable = true;
-            self.counter--;
-            if( self.currentlyShowing - self.dataToShow.length <= 0){
-                self.isPrevAvaliable = false;
-            }
-        },
-    }
 }

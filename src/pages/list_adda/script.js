@@ -5,10 +5,12 @@ import _ from 'lodash'
 import googleStyle from '../new_req/style_json.json'
 
 import confirmPopup from '../../partials/components/modals/confirm_popup.vue'
+import tableComp from '../../partials/components/html_utils/tabel_comp.vue'
 
 export default {
     components: {
-        confirm_popup: confirmPopup
+        confirm_popup: confirmPopup,
+        table_comp: tableComp
     },
     created: function () {
         let self = this;
@@ -40,17 +42,6 @@ export default {
                 self.data = [];
             }
             self.dataLoad = false;
-            if (self.data.length > 10) {
-                console.log("Length is gretaer the 10");
-                self.dataToShow = self.data.slice(0, 10);
-                self.currentlyShowing = self.dataToShow.length;
-                self.isNextAvaliable = true;
-            }
-            else {
-                self.dataToShow = self.data;
-                console.log("Length is gretaer the 10");
-            }
-            self.isPrevAvaliable = false;
         });
     },
     destroyed() {
@@ -68,19 +59,6 @@ export default {
             addaListRef: db.ref('adda_list'),
             search_table: '',
             removeID: "",
-
-            currentlyShowing: 0,
-            dataToShow: [],
-            isNextAvaliable: false,
-            isPrevAvaliable: false,
-            counter: 1,
-            pag: 1,
-        }
-    },
-    watch: {
-        search_table: function (val) {
-            let self = this;
-            func.tableSearch(self.$refs.table, val);
         }
     },
     methods: {
@@ -152,30 +130,6 @@ export default {
         },
         moveEdit (key) {
             this.$router.push('/admin/adda/edit/'+key);
-        },
-
-        btnNext: function (last) {
-            let self = this;
-            self.pag += 10;
-            self.dataToShow = self.data.slice(self.currentlyShowing,self.currentlyShowing+10);
-            self.currentlyShowing += self.dataToShow.length;
-            self.counter++;
-            if(self.data.length <= self.currentlyShowing){
-                self.isNextAvaliable = false;
-            }
-            self.isPrevAvaliable = true;
-        },
-        btnPrev: function () {
-            let self = this;
-            self.pag -= 10;
-            self.currentlyShowing -= self.dataToShow.length;
-            self.dataToShow = self.data.slice(self.data.length-self.dataToShow.length-10,self.data.length-self.dataToShow.length);
-
-            self.isNextAvaliable = true;
-            self.counter--;
-            if( self.currentlyShowing - self.dataToShow.length <= 0){
-                self.isPrevAvaliable = false;
-            }
         },
     }
 }

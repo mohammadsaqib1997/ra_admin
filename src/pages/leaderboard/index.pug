@@ -64,8 +64,8 @@ aside.right-side
                             div.text-center(v-if='loader')
                                 i.fa.fa-refresh.fa-spin.fa-3x.fa-fw
                             template(v-else)
-                                table.table.table-hover
-                                    thead
+                                table_comp(v-bind:per_page="10")
+                                    template(slot="thead")
                                         tr
                                             th Rank#
                                             th Name
@@ -74,9 +74,9 @@ aside.right-side
                                             th Earning
                                             th Bids
                                             th Total Points
-                                    tbody
-                                        tr(v-for="(row, ind) in dataToShow")
-                                            td {{ ind+pag }}
+                                    template(slot="tbody")
+                                        tr(v-for="(row, ind) in data")
+                                            td {{ ind+1 }}
                                             td
                                                 router-link(:to="'/admin/drivers/profile/'+row.id") {{ row.name }}
                                             td {{ row.time.m }} mins
@@ -84,9 +84,3 @@ aside.right-side
                                             td {{ row.earning }}
                                             td {{ row.bids }}
                                             td {{ row.points }}
-                span.o_pager_value.center-block.pagination-centered.text-center {{counter}}
-                    |  /
-                    span.o_pager_limit(style="padding-right: 6px;") 57
-                    span.btn-group.btn-group-sm
-                        button.fa.fa-chevron-left.btn.btn-icon.o_pager_previous(v-if='isPrevAvaliable',v-on:click="btnPrev",style='background-color:white;border-color: #adadad;color: #4c4c4c;',type='button', accesskey='p')
-                        button.fa.fa-chevron-right.btn.btn-icon.o_pager_next(v-if='isNextAvaliable', v-on:click="btnNext", style='background-color:white;border-color: #adadad;color: #4c4c4c;',type='button', accesskey='n')

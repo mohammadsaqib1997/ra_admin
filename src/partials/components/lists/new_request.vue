@@ -9,8 +9,8 @@
                         i.fa.fa-refresh.fa-spin.fa-3x.fa-fw
                     h3.text-center(style='margin: 15px 0;' v-if='!dataLoad && all.length === 0')
                         | No Data Found!
-                    table.table.table-hover(v-if='!dataLoad && all.length > 0')
-                        thead
+                    table_comp(v-if='!dataLoad && all.length > 0' v-bind:per_page="10")
+                        template(slot="thead")
                             tr
                                 th S.No#
                                 th Date
@@ -23,7 +23,7 @@
                                 th Require Vehicle
                                 th Number Of Bids
                                 th Action
-                        tbody
+                        template(slot="tbody")
                             tr(v-for='(row, ind) in all')
                                 td {{ ind+1 }}
                                 td {{ row.createdAt }}
@@ -51,12 +51,14 @@
 
     import pushBids from '../modals/push_bids.vue'
     import parcelImages from '../modals/parcel_images.vue'
+    import tableComp from '../html_utils/tabel_comp.vue'
 
     export default {
         name: "new_request",
         components: {
             'push_bids': pushBids,
-            'parcel_images': parcelImages
+            'parcel_images': parcelImages,
+            'table_comp': tableComp
         },
         watch: {
             all (val) {
