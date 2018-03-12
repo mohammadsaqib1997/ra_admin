@@ -28,12 +28,13 @@
                     .form-group
                         label(for='password') Password
                         input.form-control(type='password' id='password' v-model='password' placeholder='Must be between 6 to 30 Characters')
+                        input.button.btn.btn-success(type='button', value='Generate', v-on:click="generate", tabindex='2')
                         p.text-danger.text-right(v-if='validation.hasError("password")') {{ validation.firstError('password') }}
                 .col-md-6
-                    .form-group
-                        label(for='confirm_password') Re-Type Password
-                        input.form-control(type='password' id='confirm_password' v-model='confirm_password' placeholder='Both Password Must Match')
-                        p.text-danger.text-right(v-if='validation.hasError("confirm_password")') {{ validation.firstError('confirm_password') }}
+                     <!--.form-group-->
+                        <!--label(for='confirm_password') Re-Type Password-->
+                        <!--input.form-control(type='password' id='confirm_password' v-model='confirm_password' placeholder='Both Password Must Match')-->
+                        <!--p.text-danger.text-right(v-if='validation.hasError("confirm_password")') {{ validation.firstError('confirm_password') }}-->
                 .col-md-6
                     .form-group
                         label(for='mobile_number') Mobile No.
@@ -184,6 +185,16 @@
             }
         },
         methods: {
+            generate(){
+                const self = this;
+                var chars = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+<>ABCDEFGHIJKLMNOP1234567890";
+                var pass = "";
+                for (var x = 0; x < 10; x++) {
+                    var i = Math.floor(Math.random() * chars.length);
+                    pass += chars.charAt(i);
+                }
+                self.password = pass;
+            },
             submit() {
                 const self = this;
                 self.formUtil.process = true;
