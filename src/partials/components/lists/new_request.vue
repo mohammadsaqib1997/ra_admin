@@ -14,6 +14,7 @@
                             tr
                                 th S.No#
                                 th Date
+                                th Request ID
                                 th User
                                 th Origin
                                 th Destination
@@ -27,6 +28,7 @@
                             tr(v-for='(row, ind) in all')
                                 td {{ ind+1 }}
                                 td {{ row.createdAt }}
+                                td {{ row.id }}
                                 td {{ row.username }}
                                 td {{ row.orgText }}
                                 td {{ row.desText }}
