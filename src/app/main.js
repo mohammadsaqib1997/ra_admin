@@ -1,5 +1,6 @@
 require('babel-core/register');
 require('babel-polyfill');
+Vue.component('progress-bar', require('./../../node_modules/vue-progress-bar'));
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'

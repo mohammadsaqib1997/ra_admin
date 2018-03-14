@@ -10,6 +10,10 @@ aside.right-side
                     |  Dashboard
             li.active Drivers
     section.content
+        confirm_popup
+            h4 Are you sure! You want to delete this item!
+            template(slot="footer")
+                button.btn.btn-danger(type="button" v-on:click.prevent="removeItem") Confirm
         .row
             .col-xs-12
                 .box
@@ -31,17 +35,21 @@ aside.right-side
                                         th Driver Name
                                         th Driver Email
                                         th Mobile#
+                                        th Driver Profile
                                         th CNIC#
                                         th Vehicle Type
                                         th Created Time
                                         th Action
-                                        th status
+                                        th Status
                                 template(slot="tbody")
                                     tr.open_row(v-for="(row, ind) in data1" v-bind:data-url="'/admin/drivers/profile/'+row.key")
                                         td {{ ind+1 }}
                                         td {{ row.first_name }} {{ row.last_name }}
                                         td {{ row.email }}
                                         td {{ row.mob_no }}
+                                        td
+                                            progress-bar(v-model='progressValue[ind]' style='background-color: #428bca;')
+
                                         td {{ row.cnic_no }}
                                         td {{ row.vehicle }}
                                         td {{ row.time }}
@@ -51,4 +59,7 @@ aside.right-side
 
                                         td
                                             button.btn.btn-primary.btn-sm(type="button", v-on:click.prevent='block(row.key, ind, $event)' v-if='row.blocked === false') Block
-                                            button.btn.btn-primary.btn-sm(type="button", v-on:click.prevent='unblock(row.key, ind, $event)' v-else ) UnBlock
+                                            button.btn.btn-info.btn-sm(type="button", v-on:click.prevent='unblock(row.key, ind, $event)' v-else ) UnBlock
+                                        //td
+                                        //    button.btn.btn-danger.btn-sm(type='button' style="margin-right: 5px;" v-on:click.stop="showPopup" v-if='row.del === 0')
+                                        //        i.fa.fa-trash-o

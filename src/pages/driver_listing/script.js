@@ -3,10 +3,13 @@ import func from '../../../custom_libs/func'
 import moment from 'moment'
 
 import tableComp from '../../partials/components/html_utils/tabel_comp.vue'
+import confirmPopup from '../../partials/components/modals/confirm_popup.vue'
 
 export default {
     components: {
-        'table_comp': tableComp
+        'table_comp': tableComp,
+        'progress-bar': require('./../../../node_modules/vue-progress-bar'),
+        confirm_popup: confirmPopup,
     },
     created: function () {
         let self = this;
@@ -24,6 +27,9 @@ export default {
                     let item = renderData[val];
                     item['key'] = val;
                     item['time'] = "";
+                    var bar = Object.keys(item).length;
+                    var percent = (bar * 100) / 20;
+                    self.progressValue[process_item] = percent;
                     if (val.length === 20) {
                         item['time'] = func.set_date_ser(new Date(func.decode_key(val)));
                     } else if (item.hasOwnProperty("createdAt")) {
@@ -43,7 +49,12 @@ export default {
         return {
             dataLoad: true,
             data1: [],
-            userRef: null
+            userRef: null,
+            profile: [],
+            counter: 45,
+            max: 100,
+            progressValue: [],
+            removeID: "",
         }
     },
     methods: {
@@ -105,5 +116,6 @@ export default {
                 });
             }
         },
+
     }
 }
