@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 import func from '../../../custom_libs/func'
 import moment from 'moment'
+import progressbar from 'vue-progress-bar'
 
 import tableComp from '../../partials/components/html_utils/tabel_comp.vue'
 import confirmPopup from '../../partials/components/modals/confirm_popup.vue'
@@ -8,7 +9,7 @@ import confirmPopup from '../../partials/components/modals/confirm_popup.vue'
 export default {
     components: {
         'table_comp': tableComp,
-        'progress-bar': require('./../../../node_modules/vue-progress-bar'),
+        'progress-bar': progressbar,
         confirm_popup: confirmPopup,
     },
     created: function () {
