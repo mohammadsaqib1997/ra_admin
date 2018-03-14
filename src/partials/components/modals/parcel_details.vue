@@ -35,16 +35,12 @@
                                 h4 Driver:&nbsp;
                                     router-link(v-bind:to="'/admin/drivers/profile/'+data.driver['uid']" target="_blank")
                                         b {{ data.driver['first_name'] }} {{ data.driver['last_name'] }}
-                                h4 Number:&nbsp;
-                                    b {{ data.driver['mob_no'] }}
                             b(v-else) Loading...
                             h3 Client Info
                             template(v-if="!loaders.client")
                                 h4 Client:&nbsp;
                                     router-link(v-bind:to="'/admin/users/profile/'+data.client['uid']" target="_blank")
                                         b {{ data.client['first_name'] }} {{ data.client['last_name'] }}
-                                h4 Number:&nbsp;
-                                    b {{ data.client['mob_no'] }}
                             b(v-else) Loading...
         parcel_images(v-bind:images="sel_images" id='pDetailImgPP')
 

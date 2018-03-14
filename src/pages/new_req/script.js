@@ -1,5 +1,4 @@
 import firebase from 'firebase'
-import moment from 'moment'
 import func from '../../../custom_libs/func'
 import googleStyle from './style_json.json'
 import _ from 'lodash'
@@ -28,25 +27,6 @@ export default {
             } else {
                 self.mapInit();
             }
-
-            $('body').on('click', '.link_copy', function (e) {
-                e.preventDefault();
-                let msg = '';
-                let copy_text = document.querySelector('.link_copy');
-                let range = document.createRange();
-                range.selectNode(copy_text);
-                window.getSelection().addRange(range);
-                try {
-                    let suc = document.execCommand('copy');
-                    msg = suc ? 'Copied!' : 'Copy Text';
-                }catch (err) {
-                    msg = 'Oops unable to copy!';
-                }
-                window.getSelection().removeAllRanges();
-                $(this).attr('title', msg)
-                    .tooltip('fixTitle')
-                    .tooltip('show');
-            });
         });
     },
     data: function () {
@@ -60,7 +40,6 @@ export default {
             liveReqRef: db.ref('/user_live_requests'),
             onlineDriversRef: db.ref('/online_drivers'),
             addaListRef: db.ref('/adda_list'),
-            completeRequestsRef: db.ref('/complete_requests'),
             // map variables
             map: null,
             markers: {},
@@ -86,7 +65,7 @@ export default {
                 self.loadAddaPins();
             }, 1000);
         },
-        loadAddaPins() {
+        loadAddaPins () {
             const self = this;
             self.addaListRef.once('value', function (snap) {
                 if (snap.val() !== null) {
@@ -98,24 +77,12 @@ export default {
                             self.addaMarkers[key] = new google.maps.Marker({
                                 position: selLL,
                                 map: self.map,
-                                label: userSnap.numChildren() + '',
+                                label: userSnap.numChildren()+'',
+                                title: row.place_name,
                                 icon: {
                                     url: "/images/icons/warehouse.png",
                                     scaledSize: new google.maps.Size(50, 50)
                                 }
-                            });
-
-                            google.maps.event.clearListeners(self.addaMarkers[key], 'click');
-                            self.addaMarkers[key].addListener('click', function () {
-                                self.map.setZoom(18);
-                                self.map.setCenter(self.addaMarkers[key].getPosition());
-                                self.infoWindows.setContent(
-                                    `<div id='map_content'>
-<p><b>Adda Name: </b>${func.toTitleCase(row.place_name)}</p>
-<p><b>No. Vehicles: </b>${userSnap.numChildren()}</p>
-</div>`
-                                );
-                                self.infoWindows.open(self.map, self.addaMarkers[key]);
                             });
 
                         });
@@ -242,22 +209,17 @@ export default {
                         self.markers[row] = new google.maps.Marker({
                             position: selLL,
                             map: self.map,
+                            title: itemSel.orgText,
                             icon: pin
                         });
                         boundbox.extend(selLL);
-
-                        google.maps.event.clearListeners(self.markers[row], 'click');
-                        self.markers[row].addListener('click', function () {
-                            self.map.setZoom(18);
-                            self.map.setCenter(self.markers[row].getPosition());
-                            self.infoWindows.setContent(
-                                `<div id='map_content'>
-<p><b>Request ID: </b><a href="#" data-toggle="tooltip" data-placement="left" title="Copy Text" class="link_copy">${row}</a></p>
-</div>`
-                            );
-                            self.infoWindows.open(self.map, self.markers[row]);
-                            $('[data-toggle="tooltip"]').tooltip();
-                        });
+                        /*processItem++;
+                        if (processItem === key_length) {
+                            if (self.dataLoad) {
+                                self.map.setCenter(boundbox.getCenter());
+                                self.map.fitBounds(boundbox);
+                            }
+                        }*/
                     });
                 }
             }
@@ -271,50 +233,26 @@ export default {
                 }
             });
         },
-        async loadDriverInfo(key) {
+        loadDriverInfo: function (key) {
             const self = this;
-            let date = moment().format('DD/MM/YYYY');
-            let data = {};
-            let num_bids = 0;
-            let num_comp_jobs = 0;
-            await self.userRef.child(key).once("value", function (snap) {
-                if (snap.val() !== null) {
-                    data = snap.val();
-                } else {
-                    console.error("No Data Found in this key: " + key);
-                }
-            });
-            await self.driverBidsRef.once('value', function (bid_snap) {
-                if (bid_snap.val() !== null) {
-                    let find_obj = _.filter(bid_snap.val(), key);
-                    _.map(find_obj, function (obj) {
-                        const sel_obj = obj[key];
-                        if (sel_obj.hasOwnProperty('first_bid_time')) {
-                            let bidDate = moment(sel_obj.first_bid_time).format('DD/MM/YYYY');
-                            if (date === bidDate) {
-                                num_bids++;
-                            }
+            self.userRef.child(key).once("value", function (snap) {
+                if(snap.val() !== null){
+                    let data = snap.val();
+                    let num_bids = 0;
+                    self.driverBidsRef.once('value', function (bid_snap) {
+                        if(bid_snap.val() !== null){
+                            let find_obj = _.filter(bid_snap.val(), key);
+                            num_bids = find_obj.length;
                         }
+                        self.infoWindows.setContent(`<div id='map_content'>
+<p><b>Name: </b><a href="/admin/drivers/profile/${key}" target="_blank">${data.first_name +" "+ data.last_name}</a></p>
+<p><b>Number Of Bids Place: </b>${num_bids}</p>
+</div>`);
                     });
+                }else {
+                    console.error("No Data Found in this key: "+key);
                 }
             });
-            await self.completeRequestsRef.orderByChild('driver_uid').equalTo(key).once('value', function (snap) {
-                if(snap.val() !== null) {
-                    _.map(snap.val(), function (obj) {
-                        let jobDate = moment(obj.active_time).format('DD/MM/YYYY');
-                        if (date === jobDate) {
-                            num_comp_jobs++;
-                        }
-                    });
-                }
-            });
-            self.infoWindows.setContent(
-                `<div id='map_content'>
-<p><b>Name: </b><a href="/admin/drivers/profile/${key}" target="_blank">${data.first_name + " " + data.last_name}</a></p>
-<p><b>Bids Today: </b>${num_bids}</p>
-<p><b>Job Completed Today: </b>${num_comp_jobs}</p>
-</div>`
-            );
         }
     }
 }
