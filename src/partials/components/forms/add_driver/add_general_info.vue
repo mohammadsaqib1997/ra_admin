@@ -134,7 +134,7 @@
             },
             email(value) {
                 let self = this;
-                return Validator.value(value).email().maxLength(50).custom(function () {
+                return Validator.value(value).required().email().maxLength(50).custom(function () {
                     if (!Validator.isEmpty(value)) {
                         return Promise.delay(1000)
                             .then(function () {
@@ -154,7 +154,7 @@
                 return Validator.value(value).required().minLength(6).maxLength(35);
             },
             'confirm_password, password': function (repeat, password) {
-                return Validator.value(repeat).match(password);
+                return Validator.value(repeat).required().match(password);
             },
             mobile_number(value) {
                 let self = this;
@@ -175,10 +175,10 @@
                 });
             },
             cnic_number(value) {
-                return Validator.value(value).digit().lengthBetween(13, 13, "Invalid CNIC Number!");
+                return Validator.value(value).required().digit().lengthBetween(13, 13, "Invalid CNIC Number!");
             },
             driving_license(value) {
-                return Validator.value(value).minLength(5).maxLength(35);
+                return Validator.value(value).required().minLength(5).maxLength(35);
             },
             sel_adda(value) {
                 return Validator.value(value).maxLength(30);
